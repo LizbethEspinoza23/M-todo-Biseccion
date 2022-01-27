@@ -1,36 +1,19 @@
-function [c,datos,i] = biseccion(fun,a,b,tol=0.001,iter=1000)
-i=1;
-f=fun;
-while 1
-    fa=f(a);
-    fb=f(b);
-    c=(a+b)/2;
-    fc=f(c);
-    datos(i,1)=a;
-    datos(i,2)=b;
-    datos(i,3)=c;
-    datos(i,4)=fa;
-    datos(i,5)=fb;
-    datos(i,6)=fc;
-    datos(i,7)=abs(c-a);
-    if (fa*fb>0)
-        fc=NaN;
-        c=NaN;
-        msgID = 'BISECCION:condicion';
-        msg = 'Error: f(a)*f(b)>0';
-        error(msgID,msg);
-    elseif i>iter
-        msgID = 'BISECCION:iteraciones';
-        msg = 'Gran número de iteraciones, posiblemente el método divergió';
-        error(msgID,msg)
-    else
-        if abs(c-a)<=tol
-            break;
-        elseif fc>0
-            a=c;
-        else
-            b=c;
+    function [y,iter] = biseccion(f,a,b,tol)
+    iter = 1;  
+    if f(a)*f(b)<0
+        while (1)
+            c = (a+b)/2;
+            if abs(f(c))<tol
+                y = c;
+                break;
+            elseif (f(a)*f(c)>0)
+                a = c;
+            else
+                b = c;
+            end
+            iter=iter+1;
         end
+    else
+        error('biseccion: no existe raiz en el intervalo [%d,%d]', a,b);
     end
-    i=i+1;
-end
+    end    
